@@ -100,8 +100,8 @@
               $.ajax({
                 url: 'http://alpha.exatronic.io/osaka1/controlcenter/scripts/getinstdata.php',
                 type: 'POST',
-                dataType: 'jsonp',
-				crossDomain: true,
+                dataType: 'json',
+				contentType:'text/plain',    
 				data: {imei:imei},
                 success: function(data)
                 { 
