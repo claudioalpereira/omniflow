@@ -98,10 +98,11 @@
           
           function GetInstData(){
               $.ajax({
-                url: './scripts/getinstdata.php',
+                url: 'http://alpha.exatronic.io/osaka1/controlcenter/scripts/getinstdata.php',
                 type: 'POST',
-                dataType: 'json',
-                data: {imei:imei},
+                dataType: 'jsonp',
+				crossDomain: true,
+				data: {imei:imei},
                 success: function(data)
                 { 
                     instdata = data;
@@ -167,7 +168,7 @@
           
           function UpdateInst(){
                 $.ajax({
-                url: './scripts/updateinstdata.php',
+                url: 'http://alpha.exatronic.io/osaka1/controlcenter/scripts/updateinstdata.php',
                 type: 'POST',
                 dataType: 'json',
                 data: {imei:imei},
