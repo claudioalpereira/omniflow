@@ -2,6 +2,7 @@
 <html>
    <head>
 	
+      <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
       <script type="text/javascript">
          function WebSocketTest()
          {
@@ -14,6 +15,7 @@
 			
 				ws.onconnection = function() {
                   console.log('conn sending login...');
+				  $('body').append('onconnection');
 				  ws.send('+login[357976063980593 , Siemens , Omni2016]');
 				  console.log("conn login is sent...");
 				};
@@ -22,6 +24,7 @@
                {
                   // Web Socket is connected, send data using send()
                   console.log('sending login...');
+				  $('body').append('onopen');
 				  ws.send('+login[357976063980593 , Siemens , Omni2016]');
 				  console.log("login is sent...");
                };
@@ -29,18 +32,21 @@
                ws.onmessage = function (evt) 
                { 
                   //var received_msg = evt.data;
-                  console.log("Message is received...");
+                  $('body').append('onmessage');
+				  console.log("Message is received...");
                };
 				ws.onerror = function (err) 
                { 
                   //var received_msg = evt.data;
-                  console.log(err);
+                  $('body').append('onerror');
+				  console.log(err);
                };
 				
                ws.onclose = function()
                { 
                   // websocket is closed.
-                  console.log("Connection is closed..."); 
+                  $('body').append('onclose');
+				  console.log("Connection is closed..."); 
                };
             }
             
