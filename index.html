@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html >
   <head>
     <meta charset="UTF-8">
@@ -102,8 +101,13 @@
                 url: 'http://alpha.exatronic.io/osaka1/controlcenter/scripts/getinstdata.php',
                 type: 'POST',
                 dataType: 'json',
-				contentType:'application/x-www-form-urlencoded; charset=utf-8',    
+				contentType:'text/plain',    
 				data: {imei:imei},
+				beforeSend: function (request)
+				{
+					request.setRequestHeader("Origin", "http://alpha.exatronic.io" );
+				},				
+				//headers: { "Origin": "http://alpha.exatronic.io" },
                 success: function(data)
                 { 
                     instdata = data;
@@ -111,7 +115,7 @@
                 },
                 error: function(data) 
                 { 
-	           debug('InstData: Query Error');
+	           console.log('InstData: Query Error');
                 }
               });    
           }GetInstData();
