@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+<!DOCTYPE html>
 <html >
   <head>
     <meta charset="UTF-8">
@@ -77,60 +77,12 @@
       <script type='text/javascript' src="http://cdnjs.cloudflare.com/ajax/libs/jquery-ajaxtransport-xdomainrequest/1.0.1/jquery.xdomainrequest.min.js"></script>
     
     <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-=======
-<!DOCTYPE HTML>
-<html>
-   <head>
-	
->>>>>>> 3e38ca555c76f92e41e1f31ed324195c8b61d0fe
       <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-      <script type="text/javascript">
-         function WebSocketTest()
-         {
-            if ("WebSocket" in window)
-            {
-               console.log("WebSocket is supported by your Browser!");
-               
-               // Let us open a web socket
-               var ws = new WebSocket("ws://62.28.231.130:19000", "echo-protocol");
-			
-				ws.onconnection = function() {
-                  console.log('conn sending login...');
-				  $('body').append('onconnection');
-				  ws.send('+login[357976063980593 , Siemens , Omni2016]');
-				  console.log("conn login is sent...");
-				};
-				
-               ws.onopen = function()
-               {
-                  // Web Socket is connected, send data using send()
-                  console.log('sending login...');
-				  $('body').append('onopen');
-				  ws.send('+login[357976063980593 , Siemens , Omni2016]');
-				  console.log("login is sent...");
-               };
-				
-               ws.onmessage = function (evt) 
-               { 
-                  //var received_msg = evt.data;
-                  $('body').append('onmessage');
-				  console.log("Message is received...");
-               };
-				ws.onerror = function (err) 
-               { 
-                  //var received_msg = evt.data;
-                  $('body').append('onerror');
-				  console.log(err);
-               };
-				
-               ws.onclose = function()
-               { 
-                  // websocket is closed.
-                  $('body').append('onclose');
-				  console.log("Connection is closed..."); 
-               };
+      <script>
+          
+          function debug(message) {
+                console.log(message);
             }
-<<<<<<< HEAD
           
 		  
 		  localStorage.setItem('imei', '357976063980593');
@@ -150,13 +102,8 @@
                 url: 'http://alpha.exatronic.io/osaka1/controlcenter/scripts/getinstdata.php',
                 type: 'POST',
                 dataType: 'json',
-				contentType:'text/plain',    
+				contentType:'application/x-www-form-urlencoded; charset=utf-8',    
 				data: {imei:imei},
-				beforeSend: function (request)
-				{
-					request.setRequestHeader("Origin", "http://alpha.exatronic.io" );
-				},				
-				//headers: { "Origin": "http://alpha.exatronic.io" },
                 success: function(data)
                 { 
                     instdata = data;
@@ -164,7 +111,7 @@
                 },
                 error: function(data) 
                 { 
-	           console.log('InstData: Query Error');
+	           debug('InstData: Query Error');
                 }
               });    
           }GetInstData();
@@ -387,23 +334,44 @@
           
           function comp2(num){
             if(num>32767)
-=======
-            
-            else
->>>>>>> 3e38ca555c76f92e41e1f31ed324195c8b61d0fe
             {
-               // The browser doesn't support WebSocket
-               console.log("WebSocket NOT supported by your Browser!");
+                return -((~num+1)+65536);
             }
-         }
+            return num;
+          }
+          
+          function LedsON(){
+                PutValuesKeyValue('POn','65');
+                PutValuesKeyValue('PPir','65');
+                PutValuesKeyValue('P1','20');
+                PutValuesKeyValue('P2','15');
+                /*
+                websocket.send( '+put[POn,65]' );
+                setTimeout(function(){websocket.send( '+put[PPir,65]' )},100);
+                setTimeout(function(){websocket.send( '+put[P1,20]' )},200);
+                setTimeout(function(){websocket.send( '+put[P2,15]' )},300);
+                */
+          }
+          
+          function LedsOFF(){
+                PutValuesKeyValue('P2','00');
+                PutValuesKeyValue('P1','00');
+                PutValuesKeyValue('PPir','00');
+                PutValuesKeyValue('POn','00');
+                /*
+                websocket.send( '+put[P2,0]' );
+                setTimeout(function(){websocket.send( '+put[P1,0]' )},100);
+                setTimeout(function(){websocket.send( '+put[PPir,0]')},200);
+                setTimeout(function(){websocket.send( '+put[POn,0]')},300);
+                */
+          }
+          //auto inst and conf data update
+          setInterval(function() {
+              GetInstData();
+              setTimeout(GetConfData,5000);
+            }, 10000);
+          
+          
       </script>
-		
-   </head>
-   <body>
-   
-      <div id="sse">
-         <a href="javascript:WebSocketTest()">Run WebSocket</a>
-      </div>
-      
-   </body>
+  </body>
 </html>
