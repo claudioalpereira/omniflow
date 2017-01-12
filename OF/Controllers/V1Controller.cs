@@ -32,8 +32,37 @@ namespace OF.Controllers
         }
 
         // PUT: api/V1/5
-        public void Put(int id, [FromBody]string value)
+        [HttpPut]
+        [Route("api/v1")]
+        public HttpResponseMessage Put(string name=null, string value=null)
         {
+//            return QueryServer(string.Format("+put[T1,15]", name, value));
+  
+                      //return string.Format("+put[{0},{1}]", name, value);
+            if (name == null || value == null)
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
+
+            var res = QueryServer(string.Format("+put[T1,15]", name, value));
+
+            if (res.Contains("+ok"))
+            {
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
+            }
+            
+
+            /*
+            var confdata = QueryServer("+getconfdata");
+            //var json = System.Web.Helpers.Json.Decode(confdata);
+
+            var json = Newtonsoft.Json.Linq.JObject.Parse(confdata);
+            json.Add("putresult", res);
+
+            return json.ToString();
+            */
         }
 
         // DELETE: api/V1/5
@@ -64,6 +93,10 @@ namespace OF.Controllers
         [Route("api/v1/getconfdata")]
         public string GetConfData()
         {
+
+            QueryServer("+updateconf");
+            System.Threading.Thread.Sleep(15000);
+
             return QueryServer("+getconfdata");
         }
 
@@ -74,8 +107,11 @@ namespace OF.Controllers
         }
 
         [Route("api/v1/getmeasures")]
-        public string GetState(DateTime from, DateTime to)
+        public string GetMeasures(DateTime? from=null, DateTime? to=null)
         {
+            from = from ?? DateTime.Now.AddDays(-10);
+            to = to ?? DateTime.Now;
+
             return QueryServer(string.Format("+getmeasures[{0:yyyy-MM-dd},{1:yyyy-MM-dd}]", from, to));
         }
 
@@ -85,7 +121,7 @@ namespace OF.Controllers
         private string QueryServer(string request)
         {
 
-            byte[] bytes = new byte[128*1024];
+            byte[] bytes = new byte[1024*1024];
             string ret = null;
 
             try
