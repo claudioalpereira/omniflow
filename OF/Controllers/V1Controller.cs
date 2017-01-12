@@ -46,6 +46,7 @@ namespace OF.Controllers
 
             if (res.Contains("+ok"))
             {
+                QueryServer("+updateconf");
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             else
