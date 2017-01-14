@@ -112,7 +112,7 @@ namespace OF.Controllers
             from = from ?? DateTime.Now.AddDays(-10);
             to = to ?? DateTime.Now;
 
-            return QueryServer(string.Format("+getmeasures[{0:yyyy-MM-dd},{1:yyyy-MM-dd}]", from, to));
+            return QueryServer(string.Format("+getmeasures[{0:yyyy-MM-dd},{1:yyyy-MM-dd}]", from, to)).Trim('"');
         }
 
 
