@@ -40,21 +40,20 @@ namespace OF.Controllers
   
                       //return string.Format("+put[{0},{1}]", name, value);
             if (name == null || value == null)
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
+                return Request.CreateResponse(HttpStatusCode.BadRequest,"parameters can't be null");
 
-            var res = QueryServer(string.Format("+put[T1,15]", name, value));
+            var res = QueryServer(string.Format("+put[{0},{1}]", name, value));
 
             if (res.Contains("+ok"))
             {
-                QueryServer("+updateconf");
-                return Request.CreateResponse(HttpStatusCode.OK);
+                //QueryServer("+updateconf");
+                return Request.CreateResponse(HttpStatusCode.OK, res);
             }
             else
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
+                return Request.CreateResponse(HttpStatusCode.BadRequest, res);
             }
             
-
             /*
             var confdata = QueryServer("+getconfdata");
             //var json = System.Web.Helpers.Json.Decode(confdata);
