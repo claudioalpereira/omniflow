@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace OF.Controllers
@@ -13,6 +14,14 @@ namespace OF.Controllers
     {
         private static string _lastInstData;
         private static DateTime _lastInstDataDT;
+
+        private static string _lastConfData;
+        private static DateTime _lastConfDataDT;
+
+        private static string _lastMeasures;
+        private static DateTime _lastMeasuresDT;
+        private static DateTime _lastMeasureFrom;
+        private static DateTime _lastMeasureTo;
 
         // GET: api/V1
         public IEnumerable<string> Get()
@@ -69,15 +78,31 @@ namespace OF.Controllers
         public void Delete(int id)
         {
         }
+        /*
 
-        [Route("api/v1/getinstdata")]
-        public string GetInstData()
+                [Route("api/v1/getinstdata")]
+                public string GetInstData()
+                {
+                    if(_lastInstDataDT!=null && DateTime.Now < _lastInstDataDT.AddMinutes(1))
+                    {
+                        return _lastInstData;
+                    }
+
+                    QueryServer("+updateinst");
+                    System.Threading.Thread.Sleep(15000);
+
+                    var instData = QueryServer("+getinstdata");
+                    var json = System.Web.Helpers.Json.Decode(instData);
+
+                    _lastInstDataDT = DateTime.Now;
+                    _lastInstData = instData;
+
+                    return instData;
+                }
+
+        */
+        private void UpdateInstData()
         {
-            if(_lastInstDataDT!=null && DateTime.Now < _lastInstDataDT.AddMinutes(1))
-            {
-                return _lastInstData;
-            }
-
             QueryServer("+updateinst");
             System.Threading.Thread.Sleep(15000);
 
@@ -87,7 +112,21 @@ namespace OF.Controllers
             _lastInstDataDT = DateTime.Now;
             _lastInstData = instData;
 
-            return instData;
+        }
+
+        [Route("api/v1/getinstdata")]
+        public string GetInstData(int Minutes = 10)
+        {
+            if (_lastInstData == null)
+            {
+                UpdateInstData();
+            }
+            else if (_lastInstDataDT < DateTime.Now.AddHours(-Minutes))
+            {
+                Task.Run(()=>UpdateInstData());
+            }
+
+            return _lastInstData;
         }
 
         [Route("api/v1/getconfdata")]
